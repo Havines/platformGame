@@ -1,26 +1,61 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Interface/GUI/Bars/BasicBar/Bar.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Themes/MenuTheme/Fonts/PixelSplitter-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_background.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_over.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_border.png" type="Texture" id=5]
+
+[sub_resource type="DynamicFont" id=2]
+size = 26
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 2 )
 
 [node name="EnergyBar" instance=ExtResource( 1 )]
+margin_right = 422.0
 
 [node name="Count" parent="." index="0"]
-custom_constants/margin_left = 20
+custom_constants/margin_left = 15
 
 [node name="Background" parent="Count" index="0"]
-margin_left = 20.0
-rect_min_size = Vector2( 140, 40 )
+margin_left = 15.0
+rect_min_size = Vector2( 145, 30 )
 
 [node name="Title" parent="Count/Background" index="0"]
+anchor_bottom = 1.0
+margin_bottom = 0.0
+custom_fonts/font = SubResource( 2 )
 text = "EP"
+valign = 1
 
 [node name="Number" parent="Count/Background" index="1"]
 custom_fonts/font = SubResource( 1 )
 text = "200\\200"
 
-[node name="HealthBar" parent="." index="1"]
-modulate = Color( 0.980392, 1, 0.423529, 1 )
+[node name="HealthUnder" type="TextureProgress" parent="HealthBar" index="0"]
+margin_right = 250.0
+margin_bottom = 32.0
+step = 5.0
+value = 100.0
+texture_under = ExtResource( 3 )
+texture_progress = ExtResource( 4 )
+tint_progress = Color( 1, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealhOver" type="TextureProgress" parent="HealthBar" index="1"]
+margin_right = 40.0
+margin_bottom = 40.0
+step = 5.0
+value = 100.0
+texture_over = ExtResource( 5 )
+texture_progress = ExtResource( 4 )
+tint_progress = Color( 0.968627, 1, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpdateTween" type="Tween" parent="HealthBar" index="2"]

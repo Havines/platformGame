@@ -5,7 +5,7 @@
 [ext_resource path="res://Scenes/Interface/HealthBar/HealthBar.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFont" id=1]
-size = 32
+size = 26
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]

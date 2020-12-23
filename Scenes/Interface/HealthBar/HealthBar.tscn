@@ -17,6 +17,7 @@ step = 5.0
 value = 100.0
 texture_under = ExtResource( 2 )
 texture_progress = ExtResource( 3 )
+tint_progress = Color( 1, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -30,6 +31,7 @@ step = 5.0
 value = 100.0
 texture_over = ExtResource( 1 )
 texture_progress = ExtResource( 3 )
+tint_progress = Color( 0, 1, 0.156863, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

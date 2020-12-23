@@ -34,7 +34,7 @@ margin_right = 860.0
 [node name="EnergyBar" parent="HBoxContainer/Bars" instance=ExtResource( 2 )]
 margin_top = 44.0
 margin_right = 860.0
-margin_bottom = 84.0
+margin_bottom = 74.0
 
 [node name="Counters" type="HBoxContainer" parent="HBoxContainer"]
 margin_left = 864.0
