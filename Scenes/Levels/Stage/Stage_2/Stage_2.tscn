@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Characters/Person/Person.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/TileSet/tileset.tres" type="TileSet" id=2]
+
+[node name="Stage_2" type="Node"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+format = 1
+tile_data = PoolIntArray( -1, 0, 0, -65523, 0, 0, 65535, 0, 0, 13, 0, 0, 131071, 0, 0, 65549, 0, 0, 196607, 0, 0, 131085, 0, 0, 262143, 0, 0, 196609, 0, 0, 196610, 0, 0, 196621, 0, 0, 327679, 0, 0, 262151, 0, 0, 262152, 0, 0, 262157, 0, 0, 393215, 0, 0, 327686, 0, 0, 327687, 0, 0, 327688, 0, 0, 327693, 0, 0, 458751, 0, 0, 393216, 0, 0, 393217, 0, 0, 393218, 0, 0, 393219, 0, 0, 393220, 0, 0, 393221, 0, 0, 393222, 0, 0, 393223, 0, 0, 393224, 0, 0, 393225, 0, 0, 393226, 0, 0, 393227, 0, 0, 393228, 0, 0, 393229, 0, 0 )
+
+[node name="Person" parent="." instance=ExtResource( 1 )]
+position = Vector2( 99.7796, 160.1 )

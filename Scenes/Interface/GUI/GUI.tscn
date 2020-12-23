@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scenes/Interface/GUI/Counters/CoinCounter/CoinCounter.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Interface/GUI/Bars/EnergyBar/EnergyBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Interface/GUI/Bars/LifeBar/LifeBar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Interface/GUI/GUI.gd" type="Script" id=4]
+
+[node name="GUI" type="MarginContainer"]
+anchor_right = 1.0
+margin_bottom = 124.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1004.0
+margin_bottom = 104.0
+
+[node name="Bars" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 860.0
+margin_bottom = 84.0
+size_flags_horizontal = 3
+
+[node name="LifeBar" parent="HBoxContainer/Bars" instance=ExtResource( 3 )]
+margin_right = 860.0
+
+[node name="EnergyBar" parent="HBoxContainer/Bars" instance=ExtResource( 2 )]
+margin_top = 44.0
+margin_right = 860.0
+margin_bottom = 84.0
+
+[node name="Counters" type="HBoxContainer" parent="HBoxContainer"]
+margin_left = 864.0
+margin_right = 984.0
+margin_bottom = 84.0
+
+[node name="CoinCounter" parent="HBoxContainer/Counters" instance=ExtResource( 1 )]
+margin_right = 120.0
+margin_bottom = 40.0
+size_flags_vertical = 0

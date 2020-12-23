@@ -1,0 +1,276 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Assets/Sprites/Adventurer-1.5/adventurer-v1.5-Sheet.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends KinematicBody2D
+
+signal health_updated(health)
+signal max_health_updated(max_health)
+signal killed()
+
+const GRAVITY_VEC = Vector2(0, 980)#pixelOnSec
+const FLOOR_NORMAL = Vector2(0, -1)
+const SLIDE_STOP = 25.0
+const SIDING_CHANGE_SPEED = 10
+const MIN_ONAIR_TIME = 0.1
+
+export var walk_speed = 300
+export (float) var max_health = 100
+
+var jump_speed = 480
+var linear_vel = Vector2()
+var onair_time = 0
+var on_floor = false
+var anim = \"\"
+
+onready var body = $Body
+onready var health = max_health setget _set_health
+onready var noDamageTimer = $NoDamageTimer
+
+
+func _physics_process(delta):
+	onair_time += delta
+	linear_vel += GRAVITY_VEC*delta
+	linear_vel = move_and_slide(linear_vel, FLOOR_NORMAL, SLIDE_STOP)
+	if is_on_floor():
+		onair_time = 0
+	on_floor = onair_time < MIN_ONAIR_TIME
+	var target_vel = 0
+	if Input.is_action_pressed(\"ui_left\"):
+		target_vel -= 1
+	if Input.is_action_pressed(\"ui_right\"):
+		target_vel += 1
+	target_vel *= walk_speed
+	linear_vel.x = lerp(linear_vel.x, target_vel, 0.3)
+	if on_floor and Input.is_action_pressed(\"ui_up\"):
+		linear_vel.y = -jump_speed
+	_apply_anim()
+
+func _apply_anim():
+	var new_anim = \"IDLE\"
+
+	if on_floor:
+		if linear_vel.x < -SIDING_CHANGE_SPEED:
+			body.scale.x = -1
+			new_anim = \"RUN\"
+		if linear_vel.x > SIDING_CHANGE_SPEED:
+			body.scale.x = 1
+			new_anim = \"RUN\"
+	else:
+		if Input.is_action_pressed(\"ui_left\") and not Input.is_action_pressed(\"ui_right\"):
+			body.scale.x = -1
+		if Input.is_action_pressed(\"ui_right\") and not Input.is_action_pressed(\"ui_left\"):
+			body.scale.x = 1
+
+		if linear_vel.y < 0:
+			new_anim = \"JUMP\"
+		else:
+			new_anim = \"FALL\"
+
+	if new_anim != anim:
+		anim = new_anim
+		$Anim.play(anim)
+
+func _set_health(value):
+	var previos_health = health
+	health = clamp(value, 0, max_health)
+	if health != previos_health:
+		emit_signal(\"health_updated\", health)
+		Global.health_player = health
+		if health == 0:
+			kill()
+
+func kill():
+	emit_signal(\"killed\")
+
+func damage(value):
+	if noDamageTimer.is_stopped():
+		noDamageTimer.start()
+		_set_health(health - value)
+		$FXPlayer.play(\"Damage\")
+		$FXPlayer.queue(\"Flash\")
+
+
+
+func _on_NoDamageTimer_timeout():
+	$FXPlayer.play(\"Rest\")
+
+
+func _on_Person_health_updated(health):
+	pass # Replace with function body.
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 26.509
+height = 38.2346
+
+[sub_resource type="Animation" id=3]
+resource_name = "FALL"
+length = 0.3
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 22, 23 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "IDLE"
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "JUMP"
+length = 0.9
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15, 0.3, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 14, 15, 16, 17, 18, 19, 20, 21 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "RUN"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 8, 9, 10, 11, 12, 13 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "Damage"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "Flash"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "Rest"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Person" type="KinematicBody2D" groups=[
+"player",
+]]
+script = SubResource( 1 )
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Body"]
+scale = Vector2( 3, 3 )
+texture = ExtResource( 1 )
+vframes = 16
+hframes = 7
+frame = 22
+region_enabled = true
+region_rect = Rect2( 0, 0, 352, 592 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 8 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.8, 0.8 )
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+anims/FALL = SubResource( 3 )
+anims/IDLE = SubResource( 4 )
+anims/JUMP = SubResource( 5 )
+anims/RUN = SubResource( 6 )
+
+[node name="NoDamageTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="FXPlayer" type="AnimationPlayer" parent="."]
+anims/Damage = SubResource( 7 )
+anims/Flash = SubResource( 8 )
+anims/Rest = SubResource( 9 )
+[connection signal="timeout" from="NoDamageTimer" to="." method="_on_NoDamageTimer_timeout"]

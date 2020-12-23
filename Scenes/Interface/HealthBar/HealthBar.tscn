@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_border.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_background.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sprites/HealthBar/HealthBar_over.png" type="Texture" id=3]
+
+[node name="HealthBar" type="Control"]
+anchor_right = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthUnder" type="TextureProgress" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+step = 5.0
+value = 100.0
+texture_under = ExtResource( 2 )
+texture_progress = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealhOver" type="TextureProgress" parent="."]
+modulate = Color( 0.12549, 1, 0, 1 )
+self_modulate = Color( 0.0784314, 1, 0, 1 )
+margin_right = 40.0
+margin_bottom = 40.0
+step = 5.0
+value = 100.0
+texture_over = ExtResource( 1 )
+texture_progress = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpdateTween" type="Tween" parent="."]
