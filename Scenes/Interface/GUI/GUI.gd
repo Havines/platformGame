@@ -8,8 +8,10 @@ func _ready():
 
 func _on_Person_health_updated(health):
 	$HBoxContainer/Bars/LifeBar/HealthBar/HealhOver.value = health
-	$HBoxContainer/Bars/LifeBar/HealthBar/UpdateTween.interpolate_property($HBoxContainer/Bars/LifeBar/HealthBar/HealthUnder, "value", \
-		$HBoxContainer/Bars/LifeBar/HealthBar/HealthUnder.value, health, 0.4, Tween.TRANS_SINE, Tween.EASE_IN_OUT, 0.4)
+	$HBoxContainer/Bars/LifeBar/HealthBar/UpdateTween.interpolate_property(\
+		$HBoxContainer/Bars/LifeBar/HealthBar/HealthUnder, "value", \
+		$HBoxContainer/Bars/LifeBar/HealthBar/HealthUnder.value, health, 0.4, \
+		Tween.TRANS_SINE, Tween.EASE_IN_OUT, 0.4)
 	$HBoxContainer/Bars/LifeBar/HealthBar/UpdateTween.start()
 
 
